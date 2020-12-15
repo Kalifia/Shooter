@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class Player : MonoBehaviour
 
     public float fireRate = 0.15f;
     float nextFire; //время до след выстр
+    int lives;
+    public Text playerLivesText;
 
     private void Awake()
     {
@@ -44,5 +47,12 @@ public class Player : MonoBehaviour
         animator.SetTrigger("Shoot");
         Instantiate(bulletPrefab, shootPosition.transform.position, transform.rotation);
         nextFire = fireRate;
+    }
+
+    public void LifeTaker()
+    {
+        lives--;
+        playerLivesText.text = lives.ToString();
+        animator.SetInteger("Death", lives);
     }
 }
