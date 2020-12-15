@@ -10,7 +10,9 @@ public class Enemy : MonoBehaviour
     public Bullet bulletPrefab;
     public GameObject enemyShootPosition;
 
-    int lives;
+
+    public int lives = 3;
+
     Animator animator;
 
     private void Awake()
@@ -20,13 +22,23 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-
+       
+            StartCoroutine(ShootCoroutine(3f));
+        
     }
 
-    // Update is called once per frame
     void Update()
     {
 
+    }
+
+    IEnumerator ShootCoroutine(float delay)
+    {
+        while (true)
+        {
+            Shoot();
+            yield return new WaitForSeconds(delay);
+        }
     }
 
     private void Shoot()
@@ -40,5 +52,9 @@ public class Enemy : MonoBehaviour
         lives--;
         enemyLivesText.text = lives.ToString();
         animator.SetInteger("Death", lives);
+        if (lives<0)
+        {
+            StopAllCoroutines();
+        }
     }
 }

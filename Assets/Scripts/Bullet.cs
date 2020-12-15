@@ -16,7 +16,7 @@ public class Bullet : MonoBehaviour
 
     private void Start()
     {
-        enemy = FindObjectOfType<Enemy>();
+
         player = FindObjectOfType<Player>();
         rb.velocity = -speed * transform.up;
     }
@@ -26,14 +26,16 @@ public class Bullet : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void OnTriggerEnter(Collider other)
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
             player.LifeTaker();
         }
-        else if (CompareTag("Enemy"))
+        else if (collision.gameObject.CompareTag("Enemy"))
         {
+            enemy = collision.GetComponent<Enemy>();
             enemy.LifeTaker();
         }
     }

@@ -11,7 +11,10 @@ public class Player : MonoBehaviour
 
     public float fireRate = 0.15f;
     float nextFire; //время до след выстр
-    int lives;
+
+
+    public int lives = 3;
+
     public Text playerLivesText;
 
     private void Awake()
@@ -21,13 +24,16 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
-    
+
     void Update()
     {
-        CheckFire();
+        if (lives >= 0)
+        {
+            CheckFire();
+        }
     }
 
     private void CheckFire()
@@ -51,8 +57,15 @@ public class Player : MonoBehaviour
 
     public void LifeTaker()
     {
-        lives--;
-        playerLivesText.text = lives.ToString();
-        animator.SetInteger("Death", lives);
+
+        if (lives < 0)
+        {
+            animator.SetInteger("Death", lives);
+        }
+        else
+        {
+            lives--;
+            playerLivesText.text = lives.ToString();
+        }
     }
 }

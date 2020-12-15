@@ -5,9 +5,11 @@ using UnityEngine;
 public class EnemyMovement : MonoBehaviour
 {
     public Player player;
+    //Enemy enemy;
     void Start()
     {
         player = FindObjectOfType<Player>();
+  
     }
 
     // Update is called once per frame
@@ -20,6 +22,8 @@ public class EnemyMovement : MonoBehaviour
     {
         Vector3 playerPosition = player.transform.position;
         Vector3 enemyPosition = transform.position;
-        transform.LookAt(playerPosition);
+        Vector3 direction = playerPosition - enemyPosition;
+        direction.z = 0;
+        transform.up = -direction;
     }
 }

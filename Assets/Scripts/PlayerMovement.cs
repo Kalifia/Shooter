@@ -7,16 +7,25 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 10f;
     Rigidbody2D rb;
     Animator animator;
+    Player player;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
     }
 
+    private void Start()
+    {
+        player = FindObjectOfType<Player>(); 
+    }
     void Update()
     {
-        Move();
-        Rotate();
+        if (player.lives>=0)
+        {
+            Move();
+            Rotate();
+        }
     }
 
     private void Move()
