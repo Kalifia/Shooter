@@ -13,11 +13,11 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        player = GetComponent<Player>(); 
     }
 
     private void Start()
     {
-        player = FindObjectOfType<Player>(); 
     }
     void Update()
     {
@@ -41,7 +41,8 @@ public class PlayerMovement : MonoBehaviour
         }
 
         animator.SetFloat("Speed", direction.magnitude);
-        rb.velocity = direction * speed;
+        rb.velocity = direction.normalized * speed;
+        print(rb.velocity.magnitude);
     }
 
     private void Rotate()

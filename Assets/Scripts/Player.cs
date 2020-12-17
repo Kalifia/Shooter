@@ -57,15 +57,12 @@ public class Player : MonoBehaviour
 
     public void LifeTaker()
     {
+        lives--;
 
+        playerLivesText.text = lives.ToString();
         if (lives < 0)
         {
-            animator.SetInteger("Death", lives);
-        }
-        else
-        {
-            lives--;
-            playerLivesText.text = lives.ToString();
+            animator.SetInteger("Lives", lives);
         }
     }
 }
