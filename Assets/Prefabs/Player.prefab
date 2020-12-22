@@ -137,7 +137,7 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5141602016568797400}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -183,7 +183,7 @@ MonoBehaviour:
     type: 3}
   shootPosition: {fileID: 5141602015872007479}
   fireRate: 0.15
-  lives: 3
+  lives: 1
   playerLivesText: {fileID: 0}
 --- !u!95 &5141602016568797407
 Animator:

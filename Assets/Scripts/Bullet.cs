@@ -8,6 +8,7 @@ public class Bullet : MonoBehaviour
     Rigidbody2D rb;
     Enemy enemy;
     Player player;
+    Zombie zombie;
 
     private void Awake()
     {
@@ -16,7 +17,8 @@ public class Bullet : MonoBehaviour
 
     private void Start()
     {
-
+        enemy = FindObjectOfType<Enemy>();
+        zombie = FindObjectOfType<Zombie>();
         player = FindObjectOfType<Player>();
         rb.velocity = -speed * transform.up;
     }
@@ -31,12 +33,17 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            player.LifeTaker();
+            player.LifeTaker(1);
         }
         else if (collision.gameObject.CompareTag("Enemy"))
         {
             enemy = collision.GetComponent<Enemy>();
-            enemy.LifeTaker();
+            enemy.LifeTaker(1);
+        }
+        else if (collision.gameObject.CompareTag("Zombie"))
+        {
+            zombie = collision.GetComponent<Zombie>();
+            zombie.LifeTaker(1);
         }
     }
 }

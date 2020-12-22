@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
 
         animator.SetFloat("Speed", direction.magnitude);
         rb.velocity = direction.normalized * speed;
-        print(rb.velocity.magnitude);
+        //print(rb.velocity.magnitude);
     }
 
     private void Rotate()

@@ -23,15 +23,9 @@ public class Enemy : MonoBehaviour
     void Start()
     {
        
-            StartCoroutine(ShootCoroutine(3f));
+            StartCoroutine(ShootCoroutine(2f));
         
     }
-
-    void Update()
-    {
-
-    }
-
     IEnumerator ShootCoroutine(float delay)
     {
         while (true)
@@ -47,14 +41,15 @@ public class Enemy : MonoBehaviour
         Instantiate(bulletPrefab, enemyShootPosition.transform.position, transform.rotation);
     }
 
-    public void LifeTaker()
+    public void LifeTaker(int lostLife)
     {
-        lives--;
+        lives-=lostLife;
         enemyLivesText.text = lives.ToString();
-        animator.SetInteger("Death", lives);
+        
         if (lives<0)
         {
             StopAllCoroutines();
+            animator.SetTrigger("Death");
         }
     }
 }

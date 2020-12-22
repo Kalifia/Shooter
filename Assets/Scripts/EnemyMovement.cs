@@ -5,7 +5,12 @@ using UnityEngine;
 public class EnemyMovement : MonoBehaviour
 {
     public Player player;
-    //Enemy enemy;
+    Enemy enemy;
+
+    private void Awake()
+    {
+        enemy = GetComponent<Enemy>();
+    }
     void Start()
     {
         player = FindObjectOfType<Player>();
@@ -15,7 +20,10 @@ public class EnemyMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Rotate();
+        if (enemy.lives >= 0)
+        {
+            Rotate();
+        }
     }
 
     private void Rotate()

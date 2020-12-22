@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     float nextFire; //время до след выстр
 
 
-    public int lives = 3;
+    public float lives = 5f;
 
     public Text playerLivesText;
 
@@ -55,14 +55,13 @@ public class Player : MonoBehaviour
         nextFire = fireRate;
     }
 
-    public void LifeTaker()
+    public void LifeTaker(float lostLife)
     {
-        lives--;
-
-        playerLivesText.text = lives.ToString();
+        lives-=lostLife;
+         playerLivesText.text = lives.ToString();
         if (lives < 0)
         {
-            animator.SetInteger("Lives", lives);
+            animator.SetTrigger("Death");
         }
     }
 }
