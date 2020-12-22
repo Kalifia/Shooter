@@ -30,10 +30,9 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (lives >= 0)
-        {
+ 
             CheckFire();
-        }
+        
     }
 
     private void CheckFire()
@@ -62,6 +61,7 @@ public class Player : MonoBehaviour
         if (lives < 0)
         {
             animator.SetTrigger("Death");
+            Destroy(this);
         }
     }
 }

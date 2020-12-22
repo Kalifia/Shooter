@@ -723,7 +723,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1100816380}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 5.01, y: -6.22, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -941,6 +941,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveRadius: 10
   attackRadius: 3
+  standbyRadius: 13
   lives: 4
 --- !u!1 &1353640116
 GameObject:
@@ -1218,7 +1219,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1984533657}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -14.65, y: 6.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1435,6 +1436,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveRadius: 10
   attackRadius: 3
+  standbyRadius: 13
   lives: 4
 --- !u!1 &2092520259
 GameObject:
@@ -1589,7 +1591,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31fee2216b7696b4c85496422ddec46b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionRadius: 6
+  explosionRadius: 10
+  damageLayers:
+    serializedVersion: 2
+    m_Bits: 768
 --- !u!1001 &5141602016124711080
 PrefabInstance:
   m_ObjectHideFlags: 0

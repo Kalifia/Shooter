@@ -6,10 +6,13 @@ public class Zombie : MonoBehaviour
 {
     public float moveRadius = 10;
     public float attackRadius = 3;
+    public float standbyRadius = 13;
     public int lives = 4;
     Animator animator;
     ZombieMovement movement;
     ZombieState activeState;
+    float distance;
+
     enum ZombieState
     {
         STAND,
@@ -31,43 +34,23 @@ public class Zombie : MonoBehaviour
 
     void Update()
     {
-        float distance = Vector3.Distance(transform.position, player.transform.position);
+        if (lives<0)
+        {
+            return;
+        }
+        
+       distance = Vector3.Distance(transform.position, player.transform.position);
 
         switch (activeState)
         {
             case ZombieState.STAND:
-                if (distance < moveRadius)
-                {
-                    activeState = ZombieState.MOVE;
-                    return;
-                }
-                movement.enabled=false;
-                animator.SetFloat("Speed", 0);
+                DoStand();
                 break;
             case ZombieState.MOVE:
-                if (distance < attackRadius)
-                {
-                    activeState = ZombieState.ATTACK;
-                    return;
-                }
-                else if (distance > moveRadius)
-                {
-                    //activeState = ZombieState.STAND;
-                    movement.ZombieBackHome();
-                    return;
-                }
-                movement.enabled = true;
-                animator.SetFloat("Speed", 1);
+                DoMove();
                 break;
             case ZombieState.ATTACK:
-                if (distance>attackRadius)
-                {
-                    activeState = ZombieState.MOVE;
-                    StopAllCoroutines();
-                    return;
-                }
-                //StartCoroutine(DamageCoroutine(100f));
-                animator.SetTrigger("Shoot");
+                DoAttack();
                 break;
         }
 
@@ -79,6 +62,9 @@ public class Zombie : MonoBehaviour
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, moveRadius);
+        
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, standbyRadius);
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRadius);
@@ -90,6 +76,7 @@ public class Zombie : MonoBehaviour
         if (lives<0)
         {
             animator.SetTrigger("Death");
+            Destroy(this);
         }
     }
 
@@ -98,9 +85,57 @@ public class Zombie : MonoBehaviour
     {
         while (true)
         {
-            player.LifeTaker(0.1f);
+            animator.SetTrigger("Shoot");
             yield return new WaitForSeconds(delay);
         }
     }
 
+    private void DoStand()
+    {
+        if (distance < moveRadius)
+        {
+            activeState = ZombieState.MOVE;
+            return;
+        }
+        movement.enabled = false;
+        animator.SetFloat("Speed", 0);
+    }
+
+    private void DoMove()
+    {
+        if (distance < attackRadius)
+        {
+            activeState = ZombieState.ATTACK;
+            StartCoroutine(DamageCoroutine(1f));
+            return;
+        }
+        else if (distance > standbyRadius)
+        {
+            //activeState = ZombieState.STAND;
+            movement.ZombieBackHome();
+            return;
+        }
+        movement.enabled = true;
+        animator.SetFloat("Speed", 1);
+    }
+
+    private void DoAttack()
+    {
+        if (distance > attackRadius)
+        {
+            activeState = ZombieState.MOVE;
+            StopAllCoroutines();
+            return;
+        }
+
+        animator.SetTrigger("Shoot");
+    }
+
+    public void DamageToPlayer()
+    {
+        if (distance > attackRadius)
+        {
+            player.LifeTaker(0.5f);
+        }
+    }
 }

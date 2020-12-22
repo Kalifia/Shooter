@@ -7,6 +7,7 @@ public class Bochka : MonoBehaviour
     public float explosionRadius = 10;
     Animator animator;
     Enemy enemy;
+    public LayerMask damageLayers;
     Player player;
     Zombie zombie;
 
@@ -15,40 +16,17 @@ public class Bochka : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    private void Start()
-    {
-        enemy = FindObjectOfType<Enemy>();
-        zombie = FindObjectOfType<Zombie>();
-        player = FindObjectOfType<Player>();
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        int[] layerMask = { LayerMask.GetMask("Enemy"), LayerMask.GetMask("Player") };
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, explosionRadius, layerMask[0], layerMask[1]);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, explosionRadius, damageLayers);
         animator.SetTrigger("Explosion");
+        Debug.Log(colliders.Length);
         foreach (Collider2D collider in colliders)
         {
-            Enemy enemy = collider.GetComponent<Enemy>();
-            Player player = collider.GetComponent<Player>();
-            Zombie zombie = collider.GetComponent<Zombie>();
-
-            if (collision.gameObject.CompareTag("Player"))
-            {
-                player.LifeTaker(2);
-            }
-            else if (collision.gameObject.CompareTag("Enemy"))
-            {
-                enemy.LifeTaker(2);
-            }
-
-            else if (collision.gameObject.CompareTag("Zombie"))
-            {
-                zombie.LifeTaker(2);
-            }
+            collider.gameObject.SendMessage("LifeTaker", 1f);
         }
 
-        
+
     }
 
     private void OnDrawGizmos()
@@ -56,4 +34,5 @@ public class Bochka : MonoBehaviour
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, explosionRadius);
     }
+
 }

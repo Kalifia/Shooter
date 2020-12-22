@@ -20,10 +20,9 @@ public class EnemyMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (enemy.lives >= 0)
-        {
+        
             Rotate();
-        }
+        
     }
 
     private void Rotate()

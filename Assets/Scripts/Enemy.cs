@@ -50,6 +50,7 @@ public class Enemy : MonoBehaviour
         {
             StopAllCoroutines();
             animator.SetTrigger("Death");
+            Destroy(this);
         }
     }
 }
