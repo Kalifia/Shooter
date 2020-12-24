@@ -29,6 +29,7 @@ public class Zombie : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<Player>();
+        ChangeState(ZombieState.STAND);
     }
 
 
@@ -38,8 +39,6 @@ public class Zombie : MonoBehaviour
         {
             return;
         }
-        
-       distance = Vector3.Distance(transform.position, player.transform.position);
 
         switch (activeState)
         {
@@ -53,9 +52,7 @@ public class Zombie : MonoBehaviour
                 DoAttack();
                 break;
         }
-
-
-
+        distance = Vector3.Distance(transform.position, player.transform.position);
     }
 
     private void OnDrawGizmos()
@@ -94,10 +91,9 @@ public class Zombie : MonoBehaviour
     {
         if (distance < moveRadius)
         {
-            activeState = ZombieState.MOVE;
+            ChangeState(ZombieState.MOVE);
             return;
         }
-        movement.enabled = false;
         animator.SetFloat("Speed", 0);
     }
 
@@ -105,17 +101,16 @@ public class Zombie : MonoBehaviour
     {
         if (distance < attackRadius)
         {
-            activeState = ZombieState.ATTACK;
+            ChangeState(ZombieState.ATTACK);
             StartCoroutine(DamageCoroutine(1f));
             return;
         }
         else if (distance > standbyRadius)
         {
-            //activeState = ZombieState.STAND;
-            movement.ZombieBackHome();
+            activeState = ZombieState.STAND;
+            //movement.ZombieBackHome();
             return;
         }
-        movement.enabled = true;
         animator.SetFloat("Speed", 1);
     }
 
@@ -123,7 +118,7 @@ public class Zombie : MonoBehaviour
     {
         if (distance > attackRadius)
         {
-            activeState = ZombieState.MOVE;
+            ChangeState(ZombieState.MOVE);
             StopAllCoroutines();
             return;
         }
@@ -136,6 +131,22 @@ public class Zombie : MonoBehaviour
         if (distance > attackRadius)
         {
             player.LifeTaker(0.5f);
+        }
+    }
+
+    private void ChangeState (ZombieState newState)
+    {
+        switch(newState)
+        {
+            case ZombieState.STAND:
+                movement.enabled = false;
+                break;
+            case ZombieState.MOVE:
+                movement.enabled = true;
+                break;
+            case ZombieState.ATTACK:
+                movement.enabled = false;
+                break;
         }
     }
 }
