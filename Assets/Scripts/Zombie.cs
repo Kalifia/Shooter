@@ -1,9 +1,12 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Zombie : MonoBehaviour
 {
+    public Action HealthChanged = delegate { }; //делегейт эта пустое дейстие чтобы не было ошибки
+
     public float moveRadius = 10;
     public float attackRadius = 3;
     public float standbyRadius = 13;
@@ -75,6 +78,8 @@ public class Zombie : MonoBehaviour
             animator.SetTrigger("Death");
             Destroy(this);
         }
+
+        HealthChanged();
     }
 
 
@@ -99,6 +104,18 @@ public class Zombie : MonoBehaviour
 
     private void DoMove()
     {
+        if (distance > moveRadius)
+        {
+            return;
+        }
+        Vector3 directionToPlayer = player.transform.position - transform.position;
+        Debug.DrawRay(transform.position, Vector2.up*50, Color.white);
+        LayerMask layerMask = LayerMask.GetMask("Obstacles");
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, directionToPlayer, directionToPlayer.magnitude, layerMask);
+        if (hit.collider!=null)
+        {
+            print(hit.collider.name);
+        }
         if (distance < attackRadius)
         {
             ChangeState(ZombieState.ATTACK);
@@ -149,4 +166,6 @@ public class Zombie : MonoBehaviour
                 break;
         }
     }
+
+
 }
