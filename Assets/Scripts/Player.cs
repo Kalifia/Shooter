@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +8,8 @@ public class Player : MonoBehaviour
 {
     public Bullet bulletPrefab;
     public GameObject shootPosition;
+    public Action OnHealthChange = delegate { };
+    public Action OnDeath = delegate { };
     Animator animator;
 
     public float fireRate = 0.15f;
@@ -57,10 +60,11 @@ public class Player : MonoBehaviour
     public void LifeTaker(float lostLife)
     {
         lives-=lostLife;
-         playerLivesText.text = lives.ToString();
+        OnHealthChange();
         if (lives < 0)
         {
             animator.SetTrigger("Death");
+            OnDeath();
             Destroy(this);
         }
     }
