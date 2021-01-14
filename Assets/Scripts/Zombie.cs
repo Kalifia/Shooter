@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 
 public class Zombie : MonoBehaviour
 {
@@ -16,7 +17,8 @@ public class Zombie : MonoBehaviour
 
     public int lives = 4;
     Animator animator;
-    ZombieMovement movement;
+
+    AIPath aiPath;
     ZombieState activeState;
     float distance;
 
@@ -32,7 +34,7 @@ public class Zombie : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        movement = GetComponent<ZombieMovement>();
+        aiPath = GetComponent<AIPath>();
     }
     void Start()
     {
@@ -113,28 +115,24 @@ public class Zombie : MonoBehaviour
 
     private void DoMove()
     {
-        if (distance > moveRadius)
-        {
-            return;
-        }
-        Vector3 directionToPlayer = player.transform.position - transform.position;
-        Debug.DrawRay(transform.position, Vector2.up * 50, Color.white);
-        LayerMask layerMask = LayerMask.GetMask("Obstacles");
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, directionToPlayer, directionToPlayer.magnitude, layerMask);
-        if (hit.collider != null)
-        {
-            print(hit.collider.name);
-        }
+        print("attack");
+        //if (distance > moveRadius)
+        //{
+        //    return;
+        //}
         if (distance < attackRadius)
         {
             ChangeState(ZombieState.ATTACK);
             StartCoroutine(DamageCoroutine(1f));
+            animator.SetFloat("Speed", 0);
+            
             return;
         }
         else if (distance > standbyRadius)
         {
             activeState = ZombieState.STAND;
             //movement.ZombieBackHome();
+            animator.SetFloat("Speed", 0);
             return;
         }
         animator.SetFloat("Speed", 1);
@@ -165,21 +163,35 @@ public class Zombie : MonoBehaviour
         switch (newState)
         {
             case ZombieState.STAND:
-                movement.enabled = false;
+                aiPath.enabled = false;
                 break;
             case ZombieState.MOVE:
-                movement.enabled = true;
+                aiPath.enabled = true;
+                break;
+            case ZombieState.RETURN:
+                aiPath.enabled = true;
                 break;
             case ZombieState.ATTACK:
-                movement.enabled = false;
+                aiPath.enabled = false;
                 break;
         }
+
+        activeState = newState;
     }
 
     void CheckMoveToPlayer()
     {
-        float angle = Vector3.Angle(-transform.up, directionToPlayer);
-        if (angle )
+        Vector3 directionToPlayer = player.transform.position - transform.position;
+        Debug.DrawRay(transform.position, Vector2.up * 50, Color.white);
+        LayerMask layerMask = LayerMask.GetMask("Obstacles");
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, directionToPlayer, directionToPlayer.magnitude, layerMask);
+        animator.SetFloat("Speed", 0);
+        if (hit.collider != null)
+        {
+            print(hit.collider.name);
+        }
+        //float angle = Vector3.Angle(-transform.up, directionToPlayer);
+        //if (angle)
     }
 
 
