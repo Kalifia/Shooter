@@ -85,6 +85,13 @@ public class Zombie : MonoBehaviour
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRadius);
+
+        Gizmos.color = Color.green;
+        Vector3 lookDirection = -transform.up;
+        Vector3 leftViewAngle = Quaternion.AngleAxis(viewAngle / 2, Vector3.forward) * lookDirection;
+        Vector3 rightViewAngle = Quaternion.AngleAxis(-viewAngle / 2, Vector3.forward) * lookDirection;
+
+        Gizmos.DrawRay(transform.position, lookDirection * moveRadius);
     }
 
     public void LifeTaker(int lostLife)
@@ -136,7 +143,7 @@ public class Zombie : MonoBehaviour
         animator.SetFloat("Speed", 1);
     }
 
-    private void DoReturn ()
+    private void DoReturn()
     {
         if (!player.isDead && CheckMoveToPlayer())
         {

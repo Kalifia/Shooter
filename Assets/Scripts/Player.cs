@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Lean.Pool;
 
 public class Player : MonoBehaviour
 {
@@ -50,7 +51,7 @@ public class Player : MonoBehaviour
     private void Shoot()
     {
         animator.SetTrigger("Shoot");
-        Instantiate(bulletPrefab, shootPosition.transform.position, transform.rotation);
+        LeanPool.Spawn(bulletPrefab, shootPosition.transform.position, transform.rotation);
         nextFire = fireRate;
     }
 

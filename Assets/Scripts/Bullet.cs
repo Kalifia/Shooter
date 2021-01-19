@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Lean.Pool;
 
 public class Bullet : MonoBehaviour
 {
@@ -20,12 +21,17 @@ public class Bullet : MonoBehaviour
         enemy = FindObjectOfType<Enemy>();
         zombie = FindObjectOfType<Zombie>();
         player = FindObjectOfType<Player>();
+        
+    }
+
+    private void OnEnable()
+    {
         rb.velocity = -speed * transform.up;
     }
 
     private void OnBecameInvisible()
     {
-        Destroy(gameObject);
+        LeanPool.Despawn(gameObject);
     }
 
 
