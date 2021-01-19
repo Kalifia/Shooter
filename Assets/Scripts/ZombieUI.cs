@@ -5,19 +5,16 @@ using UnityEngine.UI;
 
 public class ZombieUI : MonoBehaviour
 {
-    public Slider healthSlider;
+    public Image slider;
     public Zombie zombie;
 
     void Start()
     {
-        healthSlider.maxValue = zombie.lives;
-        healthSlider.value = zombie.lives;
-
-        zombie.HealthChanged += UpdateHealthBar; 
+        zombie.HealthChanged += UpdateHealthBar;
     }
     public void UpdateHealthBar()
     {
-        healthSlider.value = zombie.lives;
+        slider.fillAmount = zombie.lives / 50;
     }
     void Update()
     {

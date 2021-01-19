@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UI : MonoBehaviour
 {
     public Slider playerHealth;
-    Player player;
+    private Player player;
     public Image gameOverPanel;
     //todo player portret
     void Start()

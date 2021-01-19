@@ -11,14 +11,11 @@ public class Player : MonoBehaviour
     public Action OnHealthChange = delegate { };
     public Action OnDeath = delegate { };
     Animator animator;
-
     public float fireRate = 0.15f;
     float nextFire; //время до след выстр
-
-
-    public float lives = 5f;
-
+    public float lives = 100f;
     public Text playerLivesText;
+    public bool isDead = false;
 
     private void Awake()
     {
@@ -64,6 +61,7 @@ public class Player : MonoBehaviour
         if (lives < 0)
         {
             animator.SetTrigger("Death");
+            isDead = true;
             OnDeath();
             Destroy(this);
         }

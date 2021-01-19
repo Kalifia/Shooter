@@ -43,7 +43,7 @@ public class Bullet : MonoBehaviour
         else if (collision.gameObject.CompareTag("Zombie"))
         {
             zombie = collision.GetComponent<Zombie>();
-            zombie.LifeTaker(1);
+            zombie.LifeTaker(10);
         }
     }
 }

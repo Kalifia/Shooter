@@ -58,43 +58,8 @@ public class ZombieMovement : MonoBehaviour
         transform.up = -direction;
     }
 
-    public void ZombieBackHome()
-    {
-        if (zombie.lives >= 0)
-        {
-            Vector3 zombiePosition = transform.position;
-            Vector3 direction = startPosition - zombiePosition;
-            if (direction.magnitude > 1)
-            {
-                direction = direction.normalized;
-            }
 
-            animator.SetFloat("Speed", direction.magnitude);
-            rb.velocity = direction * speed;
-        }
-    }
 
-    //public void Patrol()
-    //{
-    //        Vector3 zombiePosition = transform.position;
-    //        Vector3 direction = point1 - zombiePosition;
-    //    if (zombiePosition = =point1)
-    //    {
-    //        direction = point 2 - zombiePosition;
-    //        return;
-    //    }
-    //    else if (zombiePosition = point2)
-    //    {
-    //        Vector3 direction = point1 - zombiePosition;
-    //    }
-    //        if (direction.magnitude > 1)
-    //        {
-    //            direction = direction.normalized;
-    //        }
-
-    //        animator.SetFloat("Speed", direction.magnitude);
-    //        rb.velocity = direction * speed;
-    //}
 
     private void OnDisable()
     {

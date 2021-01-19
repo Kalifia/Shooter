@@ -12,15 +12,16 @@ public class Zombie : MonoBehaviour
     public float moveRadius = 10;
     public float attackRadius = 3;
     public float standbyRadius = 13;
-
-
-
-    public int lives = 4;
+    public int viewAngle = 90;
+    bool isDead = false;
+    public int lives = 50;
     Animator animator;
-
+    Vector3 startPosition;
+    Player player;
     AIPath aiPath;
+    AIDestinationSetter aiDestinationSetter;
     ZombieState activeState;
-    float distance;
+    float distanceToPlayer;
 
     enum ZombieState
     {
@@ -30,16 +31,18 @@ public class Zombie : MonoBehaviour
         RETURN
     }
 
-    Player player;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
         aiPath = GetComponent<AIPath>();
+        aiDestinationSetter = GetComponent<AIDestinationSetter>();
     }
     void Start()
     {
         player = FindObjectOfType<Player>();
         ChangeState(ZombieState.STAND);
+        startPosition = transform.position;
         player.OnDeath += PlayerDied;
     }
 
@@ -49,7 +52,7 @@ public class Zombie : MonoBehaviour
     }
     void Update()
     {
-        if (lives < 0)
+        if (isDead)
         {
             return;
         }
@@ -59,6 +62,9 @@ public class Zombie : MonoBehaviour
             case ZombieState.STAND:
                 DoStand();
                 break;
+            case ZombieState.RETURN:
+                DoReturn();
+                break;
             case ZombieState.MOVE:
                 DoMove();
                 break;
@@ -66,7 +72,7 @@ public class Zombie : MonoBehaviour
                 DoAttack();
                 break;
         }
-        distance = Vector3.Distance(transform.position, player.transform.position);
+        distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
     }
 
     private void OnDrawGizmos()
@@ -84,11 +90,12 @@ public class Zombie : MonoBehaviour
     public void LifeTaker(int lostLife)
     {
         lives -= lostLife;
-        if (lives < 0)
+        if (lives <= 0)
         {
+            isDead = true;
             animator.SetTrigger("Death");
             player.OnDeath -= PlayerDied;
-            Destroy(this);
+            Destroy(gameObject);
         }
         HealthChanged();
     }
@@ -105,42 +112,47 @@ public class Zombie : MonoBehaviour
 
     private void DoStand()
     {
-        if (distance < moveRadius)
+        if (!player.isDead)
         {
-            ChangeState(ZombieState.MOVE);
-            return;
+            CheckMoveToPlayer();
         }
-        animator.SetFloat("Speed", 0);
     }
 
     private void DoMove()
     {
-        print("attack");
-        //if (distance > moveRadius)
-        //{
-        //    return;
-        //}
-        if (distance < attackRadius)
+        if (distanceToPlayer < attackRadius)
         {
             ChangeState(ZombieState.ATTACK);
             StartCoroutine(DamageCoroutine(1f));
             animator.SetFloat("Speed", 0);
-            
             return;
         }
-        else if (distance > standbyRadius)
+        else if (distanceToPlayer > standbyRadius)
         {
-            activeState = ZombieState.STAND;
-            //movement.ZombieBackHome();
+            activeState = ZombieState.RETURN;
             animator.SetFloat("Speed", 0);
             return;
         }
         animator.SetFloat("Speed", 1);
     }
 
+    private void DoReturn ()
+    {
+        if (!player.isDead && CheckMoveToPlayer())
+        {
+            return;
+        }
+        float distanceToStart = Vector3.Distance(transform.position, startPosition);
+        if (distanceToStart <= 0.05f)
+        {
+            ChangeState(ZombieState.STAND);
+            return;
+        }
+    }
+
     private void DoAttack()
     {
-        if (distance > attackRadius)
+        if (distanceToPlayer > attackRadius)
         {
             ChangeState(ZombieState.MOVE);
             StopAllCoroutines();
@@ -152,9 +164,9 @@ public class Zombie : MonoBehaviour
 
     public void DamageToPlayer()
     {
-        if (distance > attackRadius)
+        if (distanceToPlayer > attackRadius)
         {
-            player.LifeTaker(0.5f);
+            player.LifeTaker(5f);
         }
     }
 
@@ -167,6 +179,7 @@ public class Zombie : MonoBehaviour
                 break;
             case ZombieState.MOVE:
                 aiPath.enabled = true;
+                aiDestinationSetter.target = player.transform;
                 break;
             case ZombieState.RETURN:
                 aiPath.enabled = true;
@@ -179,19 +192,30 @@ public class Zombie : MonoBehaviour
         activeState = newState;
     }
 
-    void CheckMoveToPlayer()
+    private bool CheckMoveToPlayer()
     {
+        if (distanceToPlayer > moveRadius)
+        {
+            return false;
+        }
+
         Vector3 directionToPlayer = player.transform.position - transform.position;
-        Debug.DrawRay(transform.position, Vector2.up * 50, Color.white);
+        Debug.DrawRay(transform.position, directionToPlayer, Color.white);
+        float angle = Vector3.Angle(-transform.up, directionToPlayer);
+        if (angle > viewAngle / 2)
+        {
+            return false;
+        }
+
         LayerMask layerMask = LayerMask.GetMask("Obstacles");
         RaycastHit2D hit = Physics2D.Raycast(transform.position, directionToPlayer, directionToPlayer.magnitude, layerMask);
-        animator.SetFloat("Speed", 0);
         if (hit.collider != null)
         {
-            print(hit.collider.name);
+            return false;
         }
-        //float angle = Vector3.Angle(-transform.up, directionToPlayer);
-        //if (angle)
+
+        ChangeState(ZombieState.MOVE);
+        return true;
     }
 
 
