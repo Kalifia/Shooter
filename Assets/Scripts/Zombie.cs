@@ -113,6 +113,8 @@ public class Zombie : MonoBehaviour
         while (true)
         {
             animator.SetTrigger("Shoot");
+            //DamageToPlayer();
+            player.LifeTaker(5f);
             yield return new WaitForSeconds(delay);
         }
     }

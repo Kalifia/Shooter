@@ -1,12 +1,11 @@
-﻿using System.Collections;
+﻿using Lean.Pool;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Lean.Pool;
 
 public class Player : MonoBehaviour
 {
+    private static Player instance;
     public Bullet bulletPrefab;
     public GameObject shootPosition;
     public Action OnHealthChange = delegate { };
@@ -18,9 +17,24 @@ public class Player : MonoBehaviour
     public Text playerLivesText;
     public bool isDead = false;
 
+    public static Player Instance
+    {
+        get
+        {
+            return instance;
+        }
+    }
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        
+        if(instance!=null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
     }
 
     void Start()
@@ -65,6 +79,14 @@ public class Player : MonoBehaviour
             isDead = true;
             OnDeath();
             Destroy(this);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (this==instance)
+        {
+            instance = null;
         }
     }
 }

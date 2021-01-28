@@ -14,10 +14,14 @@ public class Aptechka : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            if (player.lives>=100)
+            {
+                return;
+            }
             player.LifeTaker(-25);
         }
 
-        Invoke("Selfdestraction", 2.0f);
+        Invoke("Selfdestraction", 0.5f);
     }
 
     private void Selfdestraction()

@@ -6,22 +6,21 @@ using UnityEngine.UI;
 public class UI : MonoBehaviour
 {
     public Slider playerHealth;
-    private Player player;
     public Image gameOverPanel;
+    //private Player player;
     //todo player portret
     void Start()
     {
-        Player player = FindObjectOfType<Player>();
-        player.OnHealthChange += UpdateHealth;
-        player.OnDeath += ShowGameOverPanel;
+        Player.Instance.OnHealthChange += UpdateHealth;
+        Player.Instance.OnDeath += ShowGameOverPanel;
 
-        playerHealth.maxValue = player.lives;
-        playerHealth.value = player.lives;
+        playerHealth.maxValue = Player.Instance.lives;
+        playerHealth.value = Player.Instance.lives;
     }
 
     void UpdateHealth()
     {
-        playerHealth.value = player.lives;
+        playerHealth.value = Player.Instance.lives;
     }
     void ShowGameOverPanel()
     {
